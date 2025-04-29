@@ -273,9 +273,14 @@ public class ControllerImplementation implements IController, ActionListener {
 
     public void handleDeletePerson() {
         if (delete != null) {
+            
+            int opcion = JOptionPane.showConfirmDialog(null, "Delete person?", "Warning", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            
+            if (opcion == JOptionPane.OK_OPTION) {
             Person p = new Person(delete.getNif().getText());
             delete(p);
             delete.getReset().doClick();
+            }
         }
     }
 
