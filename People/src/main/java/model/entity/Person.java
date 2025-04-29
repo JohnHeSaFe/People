@@ -35,7 +35,7 @@ public class Person implements Serializable{
      * @param nif 
      */
     public Person(String nif) {
-        this.nif = nif;
+        this.nif = nif; /*a*/
     }
     
     /**
