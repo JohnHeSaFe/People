@@ -152,7 +152,8 @@ public class Insert extends javax.swing.JDialog {
         photo.setBackground(new java.awt.Color(255, 255, 255));
         photo.setFont(new java.awt.Font("Segoe UI", 2, 10)); // NOI18N
         photo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        photo.setText("<html><center>PHOTO</center></br><br><center> <i>Supported format: PNG.</i></center></br><br><center><i>Max. size 64KB</i></center></html>");
+        photo.setText("<html>\n  <div style=\"text-align: center;\">\n    <b>Drop your file here</b>\n    <br>\n    <br>PHOTO<br>\n    <br>\n    <i>Supported format: PNG.</i><br>\n    <br>\n    <i>Max. size 64KB</i>\n  </div>\n</html>");
+        photo.setToolTipText("");
         photo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         photo.setMaximumSize(new java.awt.Dimension(150, 135));
         photo.setMinimumSize(new java.awt.Dimension(150, 135));
