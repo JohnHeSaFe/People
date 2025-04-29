@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * @author Francesc Perez
  * @version 1.1.0
  */
-//test cc
 public interface IController {
     public abstract Person read(Person p);
     public abstract ArrayList<Person> readAll();
