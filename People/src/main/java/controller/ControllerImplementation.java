@@ -235,6 +235,8 @@ public class ControllerImplementation implements IController, ActionListener {
         }
         insert(p);
         insert.getReset().doClick();
+        
+        JOptionPane.showMessageDialog(menu, "Person inserted successfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void handleReadAction() {
@@ -370,10 +372,9 @@ public class ControllerImplementation implements IController, ActionListener {
 
         if (answer == 0) {
             deleteAll();
-        }
-        JOptionPane.showMessageDialog(menu, "All persons have been deleted successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(menu, "All persons have been deleted successfully!", "Delete All - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+        }   
     }
-
     /**
      * This function inserts the Person object with the requested NIF, if it
      * doesn't exist. If there is any access problem with the storage device,
