@@ -5,6 +5,7 @@
  */
 package view;
 
+import java.awt.Color;
 import static utils.DataValidation.calculateNifLetter;
 import static utils.DataValidation.isNumber;
 
@@ -15,6 +16,7 @@ import javax.swing.JTextField;
 
 /**
  * Interface used to delete a person. It is mandatory to enter the NIF.
+ *
  * @author Francesc Perez
  * @version 1.1.0
  */
@@ -22,6 +24,7 @@ public class Delete extends javax.swing.JDialog {
 
     /**
      * Creates new form StudentDelete
+     *
      * @param parent
      * @param modal
      */
@@ -42,7 +45,7 @@ public class Delete extends javax.swing.JDialog {
     public JButton getReset() {
         return reset;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,9 +94,19 @@ public class Delete extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
         getContentPane().add(delete, gridBagConstraints);
 
+        nif.setForeground(new java.awt.Color(153, 153, 153));
+        nif.setText("Enter NIF number, letter is calculated (e.g., 12345678)");
         nif.setMaximumSize(new java.awt.Dimension(400, 22));
         nif.setMinimumSize(new java.awt.Dimension(400, 22));
         nif.setPreferredSize(new java.awt.Dimension(400, 22));
+        nif.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                nifFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                nifFocusLost(evt);
+            }
+        });
         nif.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 nifKeyPressed(evt);
@@ -155,7 +168,7 @@ public class Delete extends javax.swing.JDialog {
             delete.setEnabled(true);
         }
     }//GEN-LAST:event_nifKeyPressed
-   
+
     private void nifKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nifKeyReleased
         if (nif.getText().length() == 8) {
             nif.setText(calculateNifLetter(nif.getText()));
@@ -177,10 +190,25 @@ public class Delete extends javax.swing.JDialog {
         delete.setEnabled(false);
     }//GEN-LAST:event_resetActionPerformed
 
+    private void nifFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nifFocusGained
+        // TODO add your handling code here:
+        if (nif.getText().equals("Enter NIF number, letter is calculated (e.g., 12345678)")) {
+            nif.setText("");
+            nif.setForeground(new Color(0, 0, 0));
+        }
+    }//GEN-LAST:event_nifFocusGained
+
+    private void nifFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nifFocusLost
+        // TODO add your handling code here:
+        if (nif.getText().equals("")) {
+            nif.setText("Enter NIF number, letter is calculated (e.g., 12345678)");
+            nif.setForeground(new Color(153, 153, 153));
+        }
+    }//GEN-LAST:event_nifFocusLost
+
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton delete;
