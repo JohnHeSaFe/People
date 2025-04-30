@@ -17,6 +17,7 @@ import view.Menu;
 import view.Read;
 import view.ReadAll;
 import view.Update;
+import view.Count;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,10 +35,10 @@ import java.util.GregorianCalendar;
 import javax.persistence.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
-
 /**
  * This class starts the visual part of the application and programs and manages
  * all the events that it can receive from it. For each event received the
@@ -58,6 +59,7 @@ public class ControllerImplementation implements IController, ActionListener {
     private Delete delete;
     private Update update;
     private ReadAll readAll;
+    private Count count;
 
     /**
      * This constructor allows the controller to know which data storage option
@@ -112,6 +114,8 @@ public class ControllerImplementation implements IController, ActionListener {
             handleReadAll();
         } else if (e.getSource() == menu.getDeleteAll()) {
             handleDeleteAll();
+        } else if (e.getSource() == menu.getCount()) {
+            handleCount();
         }
     }
 
@@ -217,6 +221,7 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.getDelete().addActionListener(this);
         menu.getReadAll().addActionListener(this);
         menu.getDeleteAll().addActionListener(this);
+        menu.getCount().addActionListener(this);
     }
 
     private void handleInsertAction() {
@@ -380,6 +385,15 @@ public class ControllerImplementation implements IController, ActionListener {
             JOptionPane.showMessageDialog(menu, "All persons have been deleted successfully!", "Delete All - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
         }   
     }
+    
+    public void handleCount() {
+        int c = count();
+        count = new Count(menu, true);
+        JLabel label = (JLabel) count.getLabel();
+        label.setText(String.valueOf(c));
+        count.setVisible(true);
+    }
+    
     /**
      * This function inserts the Person object with the requested NIF, if it
      * doesn't exist. If there is any access problem with the storage device,
@@ -535,4 +549,9 @@ public class ControllerImplementation implements IController, ActionListener {
         }
     }
 
+    @Override
+    public int count() {
+        ArrayList<Person> person = readAll();
+        return person.size();
+    }
 }

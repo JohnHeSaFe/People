@@ -15,6 +15,8 @@ public interface IController {
     public abstract Person read(Person p);
 
     public abstract ArrayList<Person> readAll();
+    
+    public abstract int count();
 
     public abstract void insert(Person p) throws Exception;
 
