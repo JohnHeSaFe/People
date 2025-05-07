@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -197,7 +199,8 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "nif varchar(9) primary key not null, "
                         + "name varchar(50), "
                         + "dateOfBirth DATE, "
-                        + "photo varchar(200) );");
+                        + "photo varchar(200),"
+                        + "phone int);");
                 stmt.close();
                 conn.close();
             }
@@ -240,7 +243,20 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleInsertPerson() {
-        Person p = new Person(insert.getNam().getText(), insert.getNif().getText());
+        
+        String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        
+        
+        String input = insert.getPhone().getText();
+        Matcher matcher = pattern.matcher(input);
+    
+        if (!matcher.matches()) {
+           JOptionPane.showMessageDialog(menu, "INVALID PHONE NUMBER!", "ERROR!", JOptionPane.WARNING_MESSAGE);
+           return;
+       } 
+           
+            Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), Integer.valueOf(insert.getPhone().getText()));
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
         }
@@ -251,7 +267,10 @@ public class ControllerImplementation implements IController, ActionListener {
         insert.getReset().doClick();
         
         JOptionPane.showMessageDialog(menu, "Person inserted successfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
-    }
+            
+            
+       }
+        
 
     private void handleReadAction() {
         read = new Read(menu, true);
@@ -264,6 +283,7 @@ public class ControllerImplementation implements IController, ActionListener {
         Person pNew = read(p);
         if (pNew != null) {
             read.getNam().setText(pNew.getName());
+            read.getPhone().setText(String.valueOf(pNew.getPhone()));
             if (pNew.getDateOfBirth() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(pNew.getDateOfBirth());
@@ -317,6 +337,8 @@ public class ControllerImplementation implements IController, ActionListener {
                 update.getPhoto().setEnabled(true);
                 update.getUpdate().setEnabled(true);
                 update.getNam().setText(pNew.getName());
+                update.getPhone().setEnabled(true);
+                update.getPhone().setText(String.valueOf(pNew.getPhone() +""));
                 if (pNew.getDateOfBirth() != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(pNew.getDateOfBirth());
@@ -336,8 +358,21 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleUpdatePerson() {
+        
+        String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        
+        
+        String input = insert.getPhone().getText();
+        Matcher matcher = pattern.matcher(input);
+    
+        if (!matcher.matches()) {
+           JOptionPane.showMessageDialog(menu, "INVALID PHONE NUMBER!", "ERROR!", JOptionPane.WARNING_MESSAGE);
+           return;
+       } 
+        
         if (update != null) {
-            Person p = new Person(update.getNam().getText(), update.getNif().getText());
+            Person p = new Person(update.getNam().getText(), update.getNif().getText(), Integer.valueOf(update.getPhone().getText()));
             if ((update.getDateOfBirth().getModel().getValue()) != null) {
                 p.setDateOfBirth(((GregorianCalendar) update.getDateOfBirth().getModel().getValue()).getTime());
             }
@@ -362,15 +397,16 @@ public class ControllerImplementation implements IController, ActionListener {
                 model.addRow(new Object[i]);
                 model.setValueAt(s.get(i).getNif(), i, 0);
                 model.setValueAt(s.get(i).getName(), i, 1);
+                model.setValueAt(s.get(i).getPhone(),i,2);
                 if (s.get(i).getDateOfBirth() != null) {
                     model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 2);
                 } else {
-                    model.setValueAt("", i, 2);
+                    model.setValueAt("", i, 3);
                 }
                 if (s.get(i).getPhoto() != null) {
-                    model.setValueAt("yes", i, 3);
+                    model.setValueAt("yes", i, 4);
                 } else {
-                    model.setValueAt("no", i, 3);
+                    model.setValueAt("no", i, 4);
                 }
             }
             readAll.setVisible(true);

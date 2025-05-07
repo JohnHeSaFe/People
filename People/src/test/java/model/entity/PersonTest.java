@@ -15,6 +15,7 @@ class PersonTest {
     private String name = "John Doe";
     private Date dateOfBirth = new Date();
     private ImageIcon photo = new ImageIcon();
+    private int phone = 600700800;
 
     @BeforeEach
     void setUp() {
@@ -32,7 +33,7 @@ class PersonTest {
 
     @Test
     void testConstructorNameAndNif() {
-        Person personWithNameAndNif = new Person(name, nif);
+        Person personWithNameAndNif = new Person(name, nif, phone);
         assertEquals(name, personWithNameAndNif.getName());
         assertEquals(nif, personWithNameAndNif.getNif());
     }
