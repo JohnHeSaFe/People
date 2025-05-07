@@ -21,6 +21,7 @@ public class Person implements Serializable{
     private String nif;
     private String name;
     private Date dateOfBirth;
+    private int phone;
     @Transient
     private ImageIcon photo;
     @Lob
@@ -35,7 +36,7 @@ public class Person implements Serializable{
      * @param nif 
      */
     public Person(String nif) {
-        this.nif = nif; /*a*/
+        this.nif = nif; 
     }
     
     /**
@@ -43,9 +44,10 @@ public class Person implements Serializable{
      * @author Fran Perez
      * @version 1.0
      */
-    public Person(String name, String nif) {
+    public Person(String name, String nif, int phone) {
         this.name = name;
         this.nif = nif;
+        this.phone = phone;
     }
 
     /**
@@ -71,6 +73,14 @@ public class Person implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getPhone() {
+        return phone;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
     }
 
     public String getNif() {

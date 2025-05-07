@@ -61,7 +61,8 @@ public class DAOSQL implements IDAO {
         while (rs.next()) {
             String nif = rs.getString("nif");
             String name = rs.getString("name");
-            pReturn = new Person(name, nif);
+            int phone = rs.getInt("phone");
+            pReturn = new Person(name, nif, phone);
             Date date = rs.getDate("dateOfBirth");
             if (date != null) {
                 pReturn.setDateOfBirth(date);
