@@ -28,17 +28,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.persistence.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
+import utils.PersonExporter;
 /**
  * This class starts the visual part of the application and programs and manages
  * all the events that it can receive from it. For each event received the
@@ -112,6 +119,8 @@ public class ControllerImplementation implements IController, ActionListener {
             handleUpdatePerson();
         } else if (e.getSource() == menu.getReadAll()) {
             handleReadAll();
+        } else if (readAll != null && e.getSource() == readAll.getExport()) {
+            handleExport();
         } else if (e.getSource() == menu.getDeleteAll()) {
             handleDeleteAll();
         } else if (e.getSource() == menu.getCount()) {
@@ -346,6 +355,8 @@ public class ControllerImplementation implements IController, ActionListener {
             JOptionPane.showMessageDialog(menu, "There are not people registered yet.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
         } else {
             readAll = new ReadAll(menu, true);
+            readAll.getExport().addActionListener(this);
+            
             DefaultTableModel model = (DefaultTableModel) readAll.getTable().getModel();
             for (int i = 0; i < s.size(); i++) {
                 model.addRow(new Object[i]);
@@ -363,6 +374,45 @@ public class ControllerImplementation implements IController, ActionListener {
                 }
             }
             readAll.setVisible(true);
+        }
+    }
+    
+    public void handleExport() {
+        File path = FileSystemView.getFileSystemView().getDefaultDirectory();
+        JFileChooser fc = new JFileChooser(path);
+        fc.setDialogTitle("Save CSV");
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setAcceptAllFileFilterUsed(false);
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("CSV File", "csv"));
+        
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Date now = new Date();
+        String nowDateFormat = dateFormat.format(now);
+        fc.setSelectedFile(new File("people_data_" + nowDateFormat + ".csv"));
+        
+        int selection = fc.showSaveDialog(null);
+        
+        if (selection == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            
+            if (!file.getName().toLowerCase().endsWith(".csv")) {
+                JOptionPane.showMessageDialog(null, "The file name must end with '.csv'.\nPlease rename the file and try again.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            if (file.exists()) {
+                JOptionPane.showMessageDialog(null, "A file with the name .\nPlease rename the file and try again.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            ArrayList<Person> s = readAll();
+            try {
+                PersonExporter.exportCSV(file, s);
+                JOptionPane.showMessageDialog(null, "Data exported successfully as " + file.getName(), "Read All - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Error exporting file", "Read All - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+            }
+            
         }
     }
 
