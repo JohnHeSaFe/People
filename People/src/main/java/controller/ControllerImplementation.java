@@ -47,6 +47,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
+import utils.Constant;
 import utils.PersonExporter;
 /**
  * This class starts the visual part of the application and programs and manages
@@ -134,22 +135,22 @@ public class ControllerImplementation implements IController, ActionListener {
         String daoSelected = ((javax.swing.JCheckBox) (dSS.getAccept()[1])).getText();
         dSS.dispose();
         switch (daoSelected) {
-            case "ArrayList":
+            case Constant.ARRAYLIST:
                 dao = new DAOArrayList();
                 break;
-            case "HashMap":
+            case Constant.HASHMAP:
                 dao = new DAOHashMap();
                 break;
-            case "File":
+            case Constant.FILE:
                 setupFileStorage();
                 break;
-            case "File (Serialization)":
+            case Constant.FILESERIALIZATION:
                 setupFileSerialization();
                 break;
-            case "SQL - Database":
+            case Constant.SQLDATABASE:
                 setupSQLDatabase();
                 break;
-            case "JPA - Database":
+            case Constant.JPADATABASE:
                 setupJPADatabase();
                 break;
         }
