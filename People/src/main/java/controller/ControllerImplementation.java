@@ -49,6 +49,7 @@ import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
 import utils.Constant;
 import utils.PersonExporter;
+import view.Login;
 /**
  * This class starts the visual part of the application and programs and manages
  * all the events that it can receive from it. For each event received the
@@ -63,6 +64,8 @@ public class ControllerImplementation implements IController, ActionListener {
     //accessed from the Controller.
     private final DataStorageSelection dSS;
     private IDAO dao;
+    private Login login;
+    private String userRole;
     private Menu menu;
     private Insert insert;
     private Read read;
@@ -102,6 +105,8 @@ public class ControllerImplementation implements IController, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == dSS.getAccept()[0]) {
             handleDataStorageSelection();
+        } else if (e.getSource() == login.getLogin()) {
+            handleLogin();
         } else if (e.getSource() == menu.getInsert()) {
             handleInsertAction();
         } else if (insert != null && e.getSource() == insert.getInsert()) {
@@ -154,9 +159,42 @@ public class ControllerImplementation implements IController, ActionListener {
                 setupJPADatabase();
                 break;
         }
+        setupLogin();
+    }
+    
+    private void handleLogin() {
+        // Justin Implement login functionality #2
+
+        String username = login.getUsername().getText();
+        String password = login.getPassword().getText();
+        
+        if (username.isBlank() || password.isBlank()) {
+            JOptionPane.showMessageDialog(login, "Please fill all camps", "Login - People v1.1.0", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        /*
+        ...
+        
+        if (...) {
+            userRole = "admin";
+        } else {
+            userRole = "employee";
+        }
+        */
+        userRole = "admin";
+        
+        login.dispose();
+        
         setupMenu();
     }
-
+    
+    private void setupLogin() {
+        login = new Login();
+        login.setVisible(true);
+        login.getLogin().addActionListener(this);
+    }
+    
     private void setupFileStorage() {
         File folderPath = new File(Routes.FILE.getFolderPath());
         File folderPhotos = new File(Routes.FILE.getFolderPhotos());
@@ -227,17 +265,31 @@ public class ControllerImplementation implements IController, ActionListener {
 
     private void setupMenu() {
         menu = new Menu();
-        menu.setVisible(true);
+        
         menu.getInsert().addActionListener(this);
-        menu.getRead().addActionListener(this);
         menu.getUpdate().addActionListener(this);
         menu.getDelete().addActionListener(this);
+        menu.getDeleteAll().addActionListener(this);  
+        menu.getRead().addActionListener(this);
         menu.getReadAll().addActionListener(this);
-        menu.getDeleteAll().addActionListener(this);
         menu.getCount().addActionListener(this);
+        
+        if (!userRole.equalsIgnoreCase("admin")) {
+            menu.getInsert().setEnabled(false);
+            menu.getUpdate().setEnabled(false);
+            menu.getDelete().setEnabled(false);
+            menu.getDeleteAll().setEnabled(false);
+        }
+        
+        menu.setVisible(true);
     }
 
     private void handleInsertAction() {
+        if (!userRole.equalsIgnoreCase("admin")) {
+            JOptionPane.showMessageDialog(null, "Employees do not have permission to do this.", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         insert = new Insert(menu, true);
         insert.getInsert().addActionListener(this);
         insert.setVisible(true);
@@ -303,6 +355,11 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleDeleteAction() {
+        if (!userRole.equalsIgnoreCase("admin")) {
+            JOptionPane.showMessageDialog(null, "Employees do not have permission to do this.", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         delete = new Delete(menu, true);
         delete.getDelete().addActionListener(this);
         delete.setVisible(true);
@@ -322,6 +379,11 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleUpdateAction() {
+        if (!userRole.equalsIgnoreCase("admin")) {
+            JOptionPane.showMessageDialog(null, "Employees do not have permission to do this.", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         update = new Update(menu, true);
         update.getUpdate().addActionListener(this);
         update.getRead().addActionListener(this);
@@ -454,6 +516,11 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleDeleteAll() {
+        if (!userRole.equalsIgnoreCase("admin")) {
+            JOptionPane.showMessageDialog(null, "Employees do not have permission to do this.", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         Object[] options = {"Yes", "No"};
         //int answer = JOptionPane.showConfirmDialog(menu, "Are you sure to delete all people registered?", "Delete All - People v1.1.0", 0, 0);
         int answer = JOptionPane.showOptionDialog(
