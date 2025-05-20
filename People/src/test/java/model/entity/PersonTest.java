@@ -20,7 +20,7 @@ class PersonTest {
     @BeforeEach
     void setUp() {
         person = new Person(nif);
-        personWithFullData = new Person(name, nif, dateOfBirth, photo);
+        personWithFullData = new Person(name, nif,dateOfBirth,photo,phone);
     }
 
     @Test
