@@ -51,10 +51,10 @@ public class DAOFile implements IDAO {
                     date = dateFormat.parse(data[2]);
                 }
                 ImageIcon photo = null;
-                if (!data[3].equals("null")) {
+                if (!data[4].equals("null")) {
                     photo = new ImageIcon(data[3]);
                 }
-                personToRead = new Person(data[0], data[1], date, photo, Integer.valueOf(data[4]));
+                personToRead = new Person(data[0], data[1], date, photo, Integer.valueOf(data[3]));
                 break;
             }
             line = br.readLine();
@@ -80,10 +80,10 @@ public class DAOFile implements IDAO {
                 date = dateFormat.parse(data[2]);
             }
             ImageIcon photo = null;
-            if (!data[3].equals("null")) {
+            if (!data[4].equals("null")) {
                 photo = new ImageIcon(data[3]);
             }
-            people.add(new Person(data[0], data[1], date, photo, Integer.valueOf(data[4])));
+            people.add(new Person(data[0], data[1], date, photo, Integer.valueOf(data[3])));
             line = br.readLine();
         }
         br.close();
@@ -149,7 +149,7 @@ public class DAOFile implements IDAO {
                 }
             } else {
                 textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3]
-                        + "\n";
+                        + "\t" + d[4] + "\n";
             }
         }
         rafRW.setLength(0);

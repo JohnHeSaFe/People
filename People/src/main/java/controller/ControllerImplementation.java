@@ -422,7 +422,7 @@ public class ControllerImplementation implements IController, ActionListener {
         Pattern pattern = Pattern.compile(phoneRegex);
         
         
-        String input = insert.getPhone().getText();
+        String input = update.getPhone().getText();
         Matcher matcher = pattern.matcher(input);
     
         if (!matcher.matches()) {
