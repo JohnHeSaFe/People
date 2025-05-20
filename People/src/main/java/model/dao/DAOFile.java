@@ -54,7 +54,7 @@ public class DAOFile implements IDAO {
                 if (!data[3].equals("null")) {
                     photo = new ImageIcon(data[3]);
                 }
-                personToRead = new Person(data[0], data[1], date, photo);
+                personToRead = new Person(data[0], data[1], date, photo, Integer.valueOf(data[4]));
                 break;
             }
             line = br.readLine();
@@ -83,7 +83,7 @@ public class DAOFile implements IDAO {
             if (!data[3].equals("null")) {
                 photo = new ImageIcon(data[3]);
             }
-            people.add(new Person(data[0], data[1], date, photo));
+            people.add(new Person(data[0], data[1], date, photo, Integer.valueOf(data[4])));
             line = br.readLine();
         }
         br.close();
@@ -100,9 +100,9 @@ public class DAOFile implements IDAO {
         if (p.getDateOfBirth() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
             String dateAsString = dateFormat.format(p.getDateOfBirth());
-            bw.write(p.getName() + "\t" + p.getNif() + "\t" + dateAsString + "\t");
+            bw.write(p.getName() + "\t" + p.getNif() + "\t" + dateAsString + "\t" + p.getPhone() + "\t");
         } else {
-            bw.write(p.getName() + "\t" + p.getNif() + "\t" + "null" + "\t");
+            bw.write(p.getName() + "\t" + p.getNif() + "\t" + "null" + "\t" + p.getPhone() + "\t");
         }
         if (p.getPhoto() != null) {
             FileOutputStream out;

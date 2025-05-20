@@ -458,7 +458,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 model.setValueAt(s.get(i).getName(), i, 1);
                 model.setValueAt(s.get(i).getPhone(),i,2);
                 if (s.get(i).getDateOfBirth() != null) {
-                    model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 2);
+                    model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 3);
                 } else {
                     model.setValueAt("", i, 3);
                 }
