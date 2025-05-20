@@ -35,6 +35,11 @@ public class Update extends javax.swing.JDialog {
         DropTarget dropTarget = new DropTarget(photo, d);
         read.setVisible(false);
         update.setEnabled(false);
+        
+        
+        JButton botonDatePicker = dateOfBirth.getButton();
+        botonDatePicker.setText("Select Date");
+        botonDatePicker.setPreferredSize(null);
     }
 
     public JButton getUpdate() {
