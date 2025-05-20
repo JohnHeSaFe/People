@@ -182,7 +182,7 @@ public class ControllerImplementation implements IController, ActionListener {
             userRole = "employee";
         }
         */
-        userRole = "admin";
+        userRole = "employee";
         
         login.dispose();
         
@@ -284,9 +284,16 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.setVisible(true);
     }
 
+    private boolean hasAdminPermission(String action) {
+        if (!"admin".equalsIgnoreCase(userRole)) {
+            JOptionPane.showMessageDialog(null, "Employees do not have permission to " + action + ".", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
     private void handleInsertAction() {
-        if (!userRole.equalsIgnoreCase("admin")) {
-            JOptionPane.showMessageDialog(null, "Employees do not have permission to do this.", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+        if (!hasAdminPermission("insert people")) {
             return;
         }
         
@@ -351,8 +358,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleDeleteAction() {
-        if (!userRole.equalsIgnoreCase("admin")) {
-            JOptionPane.showMessageDialog(null, "Employees do not have permission to do this.", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+        if (!hasAdminPermission("delete people")) {
             return;
         }
         
@@ -375,8 +381,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleUpdateAction() {
-        if (!userRole.equalsIgnoreCase("admin")) {
-            JOptionPane.showMessageDialog(null, "Employees do not have permission to do this.", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+        if (!hasAdminPermission("update people")) {
             return;
         }
         
@@ -503,7 +508,7 @@ public class ControllerImplementation implements IController, ActionListener {
             ArrayList<Person> s = readAll();
             try {
                 PersonExporter.exportCSV(file, s);
-                JOptionPane.showMessageDialog(null, "Data exported successfully as " + file.getName(), "Read All - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Data exported successfully as " + file.getName(), "Read All - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error exporting file", "Read All - People v1.1.0", JOptionPane.ERROR_MESSAGE);
             }
@@ -512,8 +517,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleDeleteAll() {
-        if (!userRole.equalsIgnoreCase("admin")) {
-            JOptionPane.showMessageDialog(null, "Employees do not have permission to do this.", "Menu - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+        if (!hasAdminPermission("delete all people")) {
             return;
         }
         
