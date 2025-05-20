@@ -182,7 +182,7 @@ public class ControllerImplementation implements IController, ActionListener {
             userRole = "employee";
         }
         */
-        userRole = "employee";
+        userRole = "admin";
         
         login.dispose();
         
@@ -706,7 +706,17 @@ public class ControllerImplementation implements IController, ActionListener {
 
     @Override
     public int count() {
-        ArrayList<Person> person = readAll();
-        return person.size();
+        int count = 0;
+        try {
+            count = dao.count();
+        } catch (Exception ex) {
+            if (ex instanceof FileNotFoundException || ex instanceof IOException
+                    || ex instanceof ParseException || ex instanceof ClassNotFoundException
+                    || ex instanceof SQLException || ex instanceof PersistenceException) {
+                JOptionPane.showMessageDialog(readAll, ex.getMessage() + " Closing application.", readAll.getTitle(), JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+        }
+        return count;
     }
 }
