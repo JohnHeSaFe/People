@@ -32,7 +32,7 @@ public class PersonExporter {
             
             String dateOfBirth = "";
             if (person.getDateOfBirth() != null) {
-                dateOfBirth = dateFormat.format(person.getDateOfBirth()); // ✅ CORRECTO
+                dateOfBirth = dateFormat.format(person.getDateOfBirth());
             }
             
             String hasPhoto = "NO";

@@ -501,10 +501,10 @@ public class ControllerImplementation implements IController, ActionListener {
             }
             
             if (file.exists()) {
-                JOptionPane.showMessageDialog(null, "A file with the name .\nPlease rename the file and try again.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "A file with the name '" + file.getName() + "' already exists.\nPlease rename the file and try again.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            
+
             ArrayList<Person> s = readAll();
             try {
                 PersonExporter.exportCSV(file, s);
