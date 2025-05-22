@@ -28,6 +28,7 @@ import javax.swing.ImageIcon;
  * functions so that they can work with files. User data is saved in the
  * "dataFile.txt" file and the associated photos, if any, are saved with the
  * name NIF.png in the "Photos" folder.
+ *
  * @author Francesc Perez
  * @version 1.1.0
  */
@@ -54,7 +55,10 @@ public class DAOFile implements IDAO {
                 if (!data[4].equals("null")) {
                     photo = new ImageIcon(data[3]);
                 }
-                personToRead = new Person(data[0], data[1], date, photo, Integer.valueOf(data[3]));
+                if (data[5] == null) {
+                    data[5] = "";
+                }
+                personToRead = new Person(data[0], data[1], date, photo, Integer.valueOf(data[3]), data[5]);
                 break;
             }
             line = br.readLine();
@@ -62,7 +66,7 @@ public class DAOFile implements IDAO {
         br.close();
         return personToRead;
     }
-    
+
     @Override
     public ArrayList<Person> readAll() throws FileNotFoundException, IOException, ParseException {
         ArrayList<Person> people = new ArrayList<>();
@@ -83,7 +87,10 @@ public class DAOFile implements IDAO {
             if (!data[4].equals("null")) {
                 photo = new ImageIcon(data[3]);
             }
-            people.add(new Person(data[0], data[1], date, photo, Integer.valueOf(data[3])));
+            if (data[5] == null) {
+                data[5] = "";
+            }
+            people.add(new Person(data[0], data[1], date, photo, Integer.valueOf(data[3]), data[5]));
             line = br.readLine();
         }
         br.close();
@@ -100,14 +107,14 @@ public class DAOFile implements IDAO {
         if (p.getDateOfBirth() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
             String dateAsString = dateFormat.format(p.getDateOfBirth());
-            bw.write(p.getName() + "\t" + p.getNif() + "\t" + dateAsString + "\t" + p.getPhone() + "\t");
+            bw.write(p.getName() + "\t" + p.getNif() + "\t" + dateAsString + "\t" + p.getPhone() + "\t" + p.getPostalCode());
         } else {
             bw.write(p.getName() + "\t" + p.getNif() + "\t" + "null" + "\t" + p.getPhone() + "\t");
         }
         if (p.getPhoto() != null) {
             FileOutputStream out;
             BufferedOutputStream outB;
-            String fileName = Routes.FILE.getFolderPhotos() + sep + p.getNif() + ".png";         
+            String fileName = Routes.FILE.getFolderPhotos() + sep + p.getNif() + ".png";
             out = new FileOutputStream(fileName);
             outB = new BufferedOutputStream(out);
             BufferedImage bi = new BufferedImage(p.getPhoto().getImage().getWidth(null),
@@ -163,10 +170,11 @@ public class DAOFile implements IDAO {
         file.delete();
         file.createNewFile();
         file = new File(Routes.FILE.getFolderPhotos());
-        for(File f : file.listFiles())
+        for (File f : file.listFiles()) {
             f.delete();
+        }
     }
-    
+
     @Override
     public void update(Person p) throws IOException {
         delete(p);
