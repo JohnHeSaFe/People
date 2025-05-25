@@ -125,9 +125,6 @@ public class Person implements Serializable {
     }
 
     public String getPostalCode() {
-        if (postalCode == null) {
-            postalCode = "";
-        }
         return postalCode;
     }
 
