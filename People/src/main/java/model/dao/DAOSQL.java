@@ -35,7 +35,7 @@ public class DAOSQL implements IDAO {
     private final String SQL_SELECT = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?);";
     private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, dateOfBirth, photo, phone, postalCode, email) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, dateOfBirth = ?, photo = ? , phone = ? , postalCode = ? , email = ? WHERE (nif = ?);";
-    private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?";
+    private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?)";
     private final String SQL_DELETE_ALL = "TRUNCATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE();
     private final String SQL_COUNT = "SELECT COUNT(*) AS total FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
 
@@ -122,8 +122,8 @@ public class DAOSQL implements IDAO {
         Connection conn;
         PreparedStatement instruction;
         conn = connect();
-        String query = SQL_DELETE + "'" + p.getNif() + "'" + ");";
-        instruction = conn.prepareStatement(query);
+        instruction = conn.prepareStatement(SQL_DELETE);
+        instruction.setString(1,p.getNif());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);
