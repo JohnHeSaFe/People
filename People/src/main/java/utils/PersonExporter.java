@@ -19,33 +19,35 @@ import model.entity.Person;
  */
 public class PersonExporter {
     public static void exportCSV(File file, ArrayList<Person> people) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        
-        bw.write("nif,name,dateOfBirth,hasPhoto");
-        bw.newLine();
-        
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");    
-        
-        for (Person person : people) {
-            String nif = escapeSpecialCharacters(person.getNif());
-            String name = escapeSpecialCharacters(person.getName());
-            
-            String dateOfBirth = "";
-            if (person.getDateOfBirth() != null) {
-                dateOfBirth = dateFormat.format(person.getDateOfBirth());
-            }
-            
-            String hasPhoto = "NO";
-            if (person.getPhoto() != null) {
-                hasPhoto = "YES";
-            }
-            
-            bw.write(nif + "," + name + "," + dateOfBirth + "," + hasPhoto);
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            bw.write("nif,name,dateOfBirth,phone,postalCode,email,hasPhoto");
             bw.newLine();
+            
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            
+            for (Person person : people) {
+                String nif = escapeSpecialCharacters(person.getNif());
+                String name = escapeSpecialCharacters(person.getName());
+                String phone = escapeSpecialCharacters(String.valueOf(person.getPhone()));
+                String postalCode = escapeSpecialCharacters(person.getPostalCode());
+                String email = escapeSpecialCharacters(person.getEmail());
+                
+                String dateOfBirth = "";
+                if (person.getDateOfBirth() != null) {
+                    dateOfBirth = dateFormat.format(person.getDateOfBirth());
+                }
+                
+                String hasPhoto = "NO";
+                if (person.getPhoto() != null) {
+                    hasPhoto = "YES";
+                }
+                
+                bw.write(nif + "," + name + "," + dateOfBirth + "," + phone + "," + postalCode + "," + email + "," + hasPhoto);
+                bw.newLine();
+            }
+            
+            bw.flush();
         }
-        
-        bw.flush();
-        bw.close();
     } 
     
     /* Method from https://www.baeldung.com/java-csv */
