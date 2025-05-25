@@ -65,10 +65,16 @@ public class Insert extends javax.swing.JDialog {
     }
 
     public JTextField getPhone() {
+        if (phone.getText().equals("Enter phone number")) {
+            phone.setText("");
+        }
         return phone;
     }
 
     public JTextField getPostalCode() {
+        if (postalCode.getText().equals("Enter postal code")) {
+            postalCode.setText("");
+        }
         return postalCode;
     }
 

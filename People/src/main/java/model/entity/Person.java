@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
  */
 @Entity
 public class Person implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String nif;
