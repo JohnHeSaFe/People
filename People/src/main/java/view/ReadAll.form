@@ -30,10 +30,10 @@
               <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="31" max="32767" attributes="0"/>
+              <EmptySpace pref="33" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="1" min="-2" pref="560" max="-2" attributes="0"/>
                   <Component id="export" alignment="1" min="-2" pref="184" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="1" min="-2" pref="722" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
           </Group>
@@ -64,12 +64,13 @@
         <Component class="javax.swing.JTable" name="table">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="6" rowCount="0">
+              <Table columnCount="7" rowCount="0">
                 <Column editable="false" title="NIF" type="java.lang.String"/>
                 <Column editable="false" title="Name" type="java.lang.String"/>
                 <Column editable="false" title="Phone" type="java.lang.String"/>
                 <Column editable="false" title="Date of Birth" type="java.lang.Object"/>
                 <Column editable="false" title="Postal code" type="java.lang.String"/>
+                <Column editable="false" title="Email Address" type="java.lang.String"/>
                 <Column editable="false" title="Photo" type="java.lang.String"/>
               </Table>
             </Property>
