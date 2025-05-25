@@ -97,7 +97,7 @@ class PersonTest {
     @Test
     void testToString() {
         String expected = "Person {Name = " + name + ", NIF = " + nif
-                + ", DateOfBirth = " + dateOfBirth + ", Photo = true}";
+                + ", DateOfBirth = " + dateOfBirth + ", Photo = true, Postal Code = " + postalCode + "}";
         assertEquals(expected, personWithFullData.toString());
     }
 }
