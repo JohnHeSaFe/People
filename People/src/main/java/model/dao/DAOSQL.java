@@ -174,6 +174,7 @@ public class DAOSQL implements IDAO {
         }
         instruction.setInt(5, p.getPhone());
         instruction.setString(6, p.getPostalCode());
+        instruction.setString(7,p.getEmail());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);
@@ -218,7 +219,8 @@ public class DAOSQL implements IDAO {
         }
         instruction.setInt(4, p.getPhone());
         instruction.setString(5, p.getPostalCode());
-        instruction.setString(6, p.getNif());
+        instruction.setString(6, p.getEmail());
+        instruction.setString(7,p.getNif());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);
