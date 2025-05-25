@@ -28,6 +28,7 @@ import javax.swing.ImageIcon;
  * functions so that they can work with files. User data is saved in the
  * "dataFile.txt" file and the associated photos, if any, are saved with the
  * name NIF.png in the "Photos" folder.
+ *
  * @author Francesc Perez
  * @version 1.1.0
  */
@@ -50,11 +51,19 @@ public class DAOFile implements IDAO {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                     date = dateFormat.parse(data[2]);
                 }
-                ImageIcon photo = null;
-                if (!data[4].equals("null")) {
-                    photo = new ImageIcon(data[3]);
+                int phone = 0;
+                if (!data[3].equals("null")) {
+                    phone = Integer.valueOf(data[3]);
                 }
-                personToRead = new Person(data[0], data[1], date, photo, Integer.valueOf(data[3]));
+                String postalCode = null;
+                if (!data[4].equals("null")) {
+                    postalCode = data[4];
+                }
+                ImageIcon photo = null; 
+                if (!data[5].equals("null")) {
+                    photo = new ImageIcon(data[5]);
+                }
+                personToRead = new Person(data[0], data[1], date, photo, phone, postalCode);
                 break;
             }
             line = br.readLine();
@@ -62,7 +71,7 @@ public class DAOFile implements IDAO {
         br.close();
         return personToRead;
     }
-    
+
     @Override
     public ArrayList<Person> readAll() throws FileNotFoundException, IOException, ParseException {
         ArrayList<Person> people = new ArrayList<>();
@@ -79,11 +88,19 @@ public class DAOFile implements IDAO {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 date = dateFormat.parse(data[2]);
             }
-            ImageIcon photo = null;
-            if (!data[4].equals("null")) {
-                photo = new ImageIcon(data[3]);
+            int phone = 0;
+            if (!data[3].equals("null")) {
+                phone = Integer.valueOf(data[3]);
             }
-            people.add(new Person(data[0], data[1], date, photo, Integer.valueOf(data[3])));
+            String postalCode = null;
+            if (!data[4].equals("null")) {
+                postalCode = data[4];
+            }
+            ImageIcon photo = null;
+            if (!data[5].equals("null")) {
+                photo = new ImageIcon(data[5]);
+            }
+            people.add(new Person(data[0], data[1], date, photo, phone, postalCode));
             line = br.readLine();
         }
         br.close();
@@ -97,17 +114,25 @@ public class DAOFile implements IDAO {
         BufferedWriter bw;
         fw = new FileWriter(Routes.FILE.getDataFile(), true);
         bw = new BufferedWriter(fw);
+        
         if (p.getDateOfBirth() != null) {
-            DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String dateAsString = dateFormat.format(p.getDateOfBirth());
             bw.write(p.getName() + "\t" + p.getNif() + "\t" + dateAsString + "\t" + p.getPhone() + "\t");
         } else {
             bw.write(p.getName() + "\t" + p.getNif() + "\t" + "null" + "\t" + p.getPhone() + "\t");
         }
+        
+        if (p.getPostalCode() != null && !p.getPostalCode().isEmpty()) {
+            bw.write(p.getPostalCode() + "\t");
+        } else {
+            bw.write("null" + "\t");
+        }
+        
         if (p.getPhoto() != null) {
             FileOutputStream out;
             BufferedOutputStream outB;
-            String fileName = Routes.FILE.getFolderPhotos() + sep + p.getNif() + ".png";         
+            String fileName = Routes.FILE.getFolderPhotos() + sep + p.getNif() + ".png";
             out = new FileOutputStream(fileName);
             outB = new BufferedOutputStream(out);
             BufferedImage bi = new BufferedImage(p.getPhoto().getImage().getWidth(null),
@@ -142,14 +167,14 @@ public class DAOFile implements IDAO {
             String l = rafRW.readLine();
             String d[] = l.split("\t");
             if (p.getNif().equals(d[1])) {
-                if (!d[3].equals("null")) {
+                if (!d[5].equals("null")) {
                     File photoFile = new File(Routes.FILE.getFolderPhotos() + sep + p.getNif()
                             + ".png");
                     photoFile.delete();
                 }
             } else {
                 textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3]
-                        + "\t" + d[4] + "\n";
+                        + "\t" + d[4] + "\t" + d[5] + "\n";
             }
         }
         rafRW.setLength(0);
@@ -163,10 +188,11 @@ public class DAOFile implements IDAO {
         file.delete();
         file.createNewFile();
         file = new File(Routes.FILE.getFolderPhotos());
-        for(File f : file.listFiles())
+        for (File f : file.listFiles()) {
             f.delete();
+        }
     }
-    
+
     @Override
     public void update(Person p) throws IOException {
         delete(p);
