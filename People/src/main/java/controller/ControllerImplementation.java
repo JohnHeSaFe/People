@@ -50,7 +50,6 @@ import org.jdatepicker.DateModel;
 import utils.Constant;
 import utils.PersonExporter;
 import view.Login;
-
 /**
  * This class starts the visual part of the application and programs and manages
  * all the events that it can receive from it. For each event received the
@@ -162,18 +161,18 @@ public class ControllerImplementation implements IController, ActionListener {
         }
         setupLogin();
     }
-
+    
     private void handleLogin() {
         // Justin Implement login functionality #2
 
         String username = login.getUsername().getText();
         String password = login.getPassword().getText();
-
+        
         if (username.isBlank() || password.isBlank()) {
             JOptionPane.showMessageDialog(login, "Please fill all camps", "Login - People v1.1.0", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        
         /*
         ...
         
@@ -182,20 +181,20 @@ public class ControllerImplementation implements IController, ActionListener {
         } else {
             userRole = "employee";
         }
-         */
+        */
         userRole = "admin";
-
+        
         login.dispose();
-
+        
         setupMenu();
     }
-
+    
     private void setupLogin() {
         login = new Login();
         login.setVisible(true);
         login.getLogin().addActionListener(this);
     }
-
+    
     private void setupFileStorage() {
         File folderPath = new File(Routes.FILE.getFolderPath());
         File folderPhotos = new File(Routes.FILE.getFolderPhotos());
@@ -240,9 +239,7 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "name varchar(50), "
                         + "dateOfBirth DATE, "
                         + "photo varchar(200),"
-                        + "phone int,"
-                        + "postalCode varchar(10));");
-
+                        + "phone int);");
                 stmt.close();
                 conn.close();
             }
@@ -268,22 +265,22 @@ public class ControllerImplementation implements IController, ActionListener {
 
     private void setupMenu() {
         menu = new Menu();
-
+        
         menu.getInsert().addActionListener(this);
         menu.getUpdate().addActionListener(this);
         menu.getDelete().addActionListener(this);
-        menu.getDeleteAll().addActionListener(this);
+        menu.getDeleteAll().addActionListener(this);  
         menu.getRead().addActionListener(this);
         menu.getReadAll().addActionListener(this);
         menu.getCount().addActionListener(this);
-
+        
         if (!userRole.equalsIgnoreCase("admin")) {
             menu.getInsert().setEnabled(false);
             menu.getUpdate().setEnabled(false);
             menu.getDelete().setEnabled(false);
             menu.getDeleteAll().setEnabled(false);
         }
-
+        
         menu.setVisible(true);
     }
 
@@ -299,42 +296,37 @@ public class ControllerImplementation implements IController, ActionListener {
         if (!hasAdminPermission("insert people")) {
             return;
         }
-
+        
         insert = new Insert(menu, true);
         insert.getInsert().addActionListener(this);
         insert.setVisible(true);
     }
 
     private void handleInsertPerson() {
-        String postalCodeRegex = "^(\\d{5})(?:[-\\s]?\\d{4})?$";
-        String postalCode = insert.getPostalCode().getText();
-        if (!postalCode.isBlank() && !postalCode.matches(postalCodeRegex)) {
-            JOptionPane.showMessageDialog(menu, "INVALID POSTAL CODE!", "ERROR!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
+        
         String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
         Pattern pattern = Pattern.compile(phoneRegex);
-        String phone = insert.getPhone().getText();
-        Matcher matcher = pattern.matcher(phone);
+        
+        
+        String input = insert.getPhone().getText();
+        Matcher matcher = pattern.matcher(input);
+    
         if (!matcher.matches()) {
-            JOptionPane.showMessageDialog(menu, "INVALID PHONE NUMBER!", "ERROR!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), Integer.valueOf(phone));
+           JOptionPane.showMessageDialog(menu, "INVALID PHONE NUMBER!", "ERROR!", JOptionPane.WARNING_MESSAGE);
+           return;
+       } 
+           
+            Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), Integer.valueOf(insert.getPhone().getText()));
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
         }
         if (insert.getPhoto().getIcon() != null) {
             p.setPhoto((ImageIcon) insert.getPhoto().getIcon());
         }
-        if (!postalCode.isBlank()) {
-            p.setPostalCode(postalCode);
-        }
         insert(p);
         insert.getReset().doClick();
-    }
+       }
+        
 
     private void handleReadAction() {
         read = new Read(menu, true);
@@ -359,7 +351,6 @@ public class ControllerImplementation implements IController, ActionListener {
                 pNew.getPhoto().getImage().flush();
                 read.getPhoto().setIcon(pNew.getPhoto());
             }
-            read.getPostalCode().setText(pNew.getPostalCode());
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
             read.getReset().doClick();
@@ -370,7 +361,7 @@ public class ControllerImplementation implements IController, ActionListener {
         if (!hasAdminPermission("delete people")) {
             return;
         }
-
+        
         delete = new Delete(menu, true);
         delete.getDelete().addActionListener(this);
         delete.setVisible(true);
@@ -378,13 +369,13 @@ public class ControllerImplementation implements IController, ActionListener {
 
     public void handleDeletePerson() {
         if (delete != null) {
-
+            
             int opcion = JOptionPane.showConfirmDialog(null, "Delete person?", "Warning", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
+            
             if (opcion == JOptionPane.OK_OPTION) {
-                Person p = new Person(delete.getNif().getText());
-                delete(p);
-                delete.getReset().doClick();
+            Person p = new Person(delete.getNif().getText());
+            delete(p);
+            delete.getReset().doClick();
             }
         }
     }
@@ -393,7 +384,7 @@ public class ControllerImplementation implements IController, ActionListener {
         if (!hasAdminPermission("update people")) {
             return;
         }
-
+        
         update = new Update(menu, true);
         update.getUpdate().addActionListener(this);
         update.getRead().addActionListener(this);
@@ -411,9 +402,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 update.getUpdate().setEnabled(true);
                 update.getNam().setText(pNew.getName());
                 update.getPhone().setEnabled(true);
-                update.getPhone().setText(String.valueOf(pNew.getPhone() + ""));
-                update.getPostalCode().setEnabled(true);
-                update.getPostalCode().setText(pNew.getPostalCode() + "");
+                update.getPhone().setText(String.valueOf(pNew.getPhone() +""));
                 if (pNew.getDateOfBirth() != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(pNew.getDateOfBirth());
@@ -425,11 +414,6 @@ public class ControllerImplementation implements IController, ActionListener {
                     update.getPhoto().setIcon(pNew.getPhoto());
                     update.getUpdate().setEnabled(true);
                 }
-                if (pNew.getPostalCode() != null) {
-                    pNew.getPostalCode();
-                    update.getPostalCode();
-                    update.getUpdate().setEnabled(true);
-                }
             } else {
                 JOptionPane.showMessageDialog(update, p.getNif() + " doesn't exist.", update.getTitle(), JOptionPane.WARNING_MESSAGE);
                 update.getReset().doClick();
@@ -438,32 +422,26 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     public void handleUpdatePerson() {
-        String postalCodeRegex = "^(\\d{5})(?:[-\\s]?\\d{4})?$";
-        String postalCode = update.getPostalCode().getText();
-        if (!postalCode.isBlank() && !postalCode.matches(postalCodeRegex)) {
-            JOptionPane.showMessageDialog(menu, "INVALID POSTAL CODE!", "ERROR!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         
         String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
         Pattern pattern = Pattern.compile(phoneRegex);
-        String phone = update.getPhone().getText();
-        Matcher matcher = pattern.matcher(phone);
+        
+        
+        String input = update.getPhone().getText();
+        Matcher matcher = pattern.matcher(input);
+    
         if (!matcher.matches()) {
-            JOptionPane.showMessageDialog(menu, "INVALID PHONE NUMBER!", "ERROR!", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
+           JOptionPane.showMessageDialog(menu, "INVALID PHONE NUMBER!", "ERROR!", JOptionPane.WARNING_MESSAGE);
+           return;
+       } 
+        
         if (update != null) {
-            Person p = new Person(update.getNam().getText(), update.getNif().getText(), Integer.valueOf(phone));
+            Person p = new Person(update.getNam().getText(), update.getNif().getText(), Integer.valueOf(update.getPhone().getText()));
             if ((update.getDateOfBirth().getModel().getValue()) != null) {
                 p.setDateOfBirth(((GregorianCalendar) update.getDateOfBirth().getModel().getValue()).getTime());
             }
             if ((ImageIcon) (update.getPhoto().getIcon()) != null) {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
-            }
-            if (postalCode != null) {
-                p.setPostalCode(postalCode);
             }
             update(p);
             update.getReset().doClick();
@@ -477,29 +455,28 @@ public class ControllerImplementation implements IController, ActionListener {
         } else {
             readAll = new ReadAll(menu, true);
             readAll.getExport().addActionListener(this);
-
+            
             DefaultTableModel model = (DefaultTableModel) readAll.getTable().getModel();
             for (int i = 0; i < s.size(); i++) {
                 model.addRow(new Object[i]);
                 model.setValueAt(s.get(i).getNif(), i, 0);
                 model.setValueAt(s.get(i).getName(), i, 1);
-                model.setValueAt(s.get(i).getPhone(), i, 2);
+                model.setValueAt(s.get(i).getPhone(),i,2);
                 if (s.get(i).getDateOfBirth() != null) {
                     model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 3);
                 } else {
                     model.setValueAt("", i, 3);
                 }
-                model.setValueAt(s.get(i).getPostalCode(), i, 4);
                 if (s.get(i).getPhoto() != null) {
-                    model.setValueAt("yes", i, 5);
+                    model.setValueAt("yes", i, 4);
                 } else {
-                    model.setValueAt("no", i, 5);
+                    model.setValueAt("no", i, 4);
                 }
             }
             readAll.setVisible(true);
         }
     }
-
+    
     public void handleExport() {
         File path = FileSystemView.getFileSystemView().getDefaultDirectory();
         JFileChooser fc = new JFileChooser(path);
@@ -507,22 +484,22 @@ public class ControllerImplementation implements IController, ActionListener {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setAcceptAllFileFilterUsed(false);
         fc.addChoosableFileFilter(new FileNameExtensionFilter("CSV File", "csv"));
-
+        
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Date now = new Date();
         String nowDateFormat = dateFormat.format(now);
         fc.setSelectedFile(new File("people_data_" + nowDateFormat + ".csv"));
-
+        
         int selection = fc.showSaveDialog(null);
-
+        
         if (selection == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-
+            
             if (!file.getName().toLowerCase().endsWith(".csv")) {
                 JOptionPane.showMessageDialog(null, "The file name must end with '.csv'.\nPlease rename the file and try again.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
+            
             if (file.exists()) {
                 JOptionPane.showMessageDialog(null, "A file with the name '" + file.getName() + "' already exists.\nPlease rename the file and try again.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -535,7 +512,7 @@ public class ControllerImplementation implements IController, ActionListener {
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error exporting file", "Read All - People v1.1.0", JOptionPane.ERROR_MESSAGE);
             }
-
+            
         }
     }
 
@@ -543,7 +520,7 @@ public class ControllerImplementation implements IController, ActionListener {
         if (!hasAdminPermission("delete all people")) {
             return;
         }
-
+        
         Object[] options = {"Yes", "No"};
         //int answer = JOptionPane.showConfirmDialog(menu, "Are you sure to delete all people registered?", "Delete All - People v1.1.0", 0, 0);
         int answer = JOptionPane.showOptionDialog(
@@ -560,9 +537,9 @@ public class ControllerImplementation implements IController, ActionListener {
         if (answer == 0) {
             deleteAll();
             JOptionPane.showMessageDialog(menu, "All persons have been deleted successfully!", "Delete All - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
-        }
+        }   
     }
-
+    
     public void handleCount() {
         int c = count();
         count = new Count(menu, true);
@@ -570,7 +547,7 @@ public class ControllerImplementation implements IController, ActionListener {
         label.setText(String.valueOf(c));
         count.setVisible(true);
     }
-
+    
     /**
      * This function inserts the Person object with the requested NIF, if it
      * doesn't exist. If there is any access problem with the storage device,
@@ -613,8 +590,8 @@ public class ControllerImplementation implements IController, ActionListener {
     @Override
     public void update(Person p) {
         try {
+            JOptionPane.showMessageDialog(update, "Persona actualizada!");
             dao.update(p);
-            JOptionPane.showMessageDialog(menu, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             //Exceptions generated by file read/write access. If something goes 
             // wrong the application closes.
