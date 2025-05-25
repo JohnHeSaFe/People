@@ -114,6 +114,9 @@ public class DAOJPA implements IDAO {
                 pC.setPhotoOnlyJPA(imageIconToBytes(p.getPhoto()));
             else
                 pC.setPhotoOnlyJPA(null);
+            pC.setPhone(p.getPhone());
+            pC.setPostalCode(p.getPostalCode());
+            pC.setEmail(p.getEmail());
             em.getTransaction().commit();
         }
         em.close();

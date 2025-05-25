@@ -35,7 +35,7 @@ public class DAOSQL implements IDAO {
     private final String SQL_SELECT = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?);";
     private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, dateOfBirth, photo, phone, postalCode, email) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, dateOfBirth = ?, photo = ? , phone = ? , postalCode = ? , email = ? WHERE (nif = ?);";
-    private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ";
+    private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?";
     private final String SQL_DELETE_ALL = "TRUNCATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE();
     private final String SQL_COUNT = "SELECT COUNT(*) AS total FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
 
@@ -174,6 +174,7 @@ public class DAOSQL implements IDAO {
         }
         instruction.setInt(5, p.getPhone());
         instruction.setString(6, p.getPostalCode());
+        instruction.setString(7,p.getEmail());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);
@@ -218,7 +219,8 @@ public class DAOSQL implements IDAO {
         }
         instruction.setInt(4, p.getPhone());
         instruction.setString(5, p.getPostalCode());
-        instruction.setString(6, p.getNif());
+        instruction.setString(6, p.getEmail());
+        instruction.setString(7,p.getNif());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);
