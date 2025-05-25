@@ -241,8 +241,8 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "dateOfBirth DATE, "
                         + "photo varchar(200),"
                         + "phone int,"
-                        + "postalCode varchar(10));");
-
+                        + "postalCode varchar(10),"
+                        + "email varchar(100));");
                 stmt.close();
                 conn.close();
             }
@@ -309,7 +309,7 @@ public class ControllerImplementation implements IController, ActionListener {
         String postalCodeRegex = "^(\\d{5})(?:[-\\s]?\\d{4})?$";
         String postalCode = insert.getPostalCode().getText();
         if (!postalCode.isBlank() && !postalCode.matches(postalCodeRegex)) {
-            JOptionPane.showMessageDialog(menu, "INVALID POSTAL CODE!", "ERROR!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(menu, "Invalid postal code.\n Example: 08001", "Insert - People v1.1.0", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -318,10 +318,17 @@ public class ControllerImplementation implements IController, ActionListener {
         String phone = insert.getPhone().getText();
         Matcher matcher = pattern.matcher(phone);
         if (!matcher.matches()) {
-            JOptionPane.showMessageDialog(menu, "INVALID PHONE NUMBER!", "ERROR!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(menu, "Invalid phone number.\n Examples: +1234567890, 123-456-7890", "Insert - People v1.1.0", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        String emailRegex = "^[a-zA-Z0-9_+&-]+(?:.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+.)+[a-zA-Z]{2,7}$";
+        String email = insert.getEmail().getText();
+        if (!email.isBlank() && !email.matches(emailRegex)) {
+            JOptionPane.showMessageDialog(menu, "Invalid email format.\n Example: jose12@email.com", "Insert - People v1.1.0", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), Integer.valueOf(phone));
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
@@ -331,6 +338,9 @@ public class ControllerImplementation implements IController, ActionListener {
         }
         if (!postalCode.isBlank()) {
             p.setPostalCode(postalCode);
+        }
+        if (!email.isBlank()) {
+           p.setEmail(email);
         }
         insert(p);
         insert.getReset().doClick();
@@ -360,6 +370,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 read.getPhoto().setIcon(pNew.getPhoto());
             }
             read.getPostalCode().setText(pNew.getPostalCode());
+            read.getEmail().setText(pNew.getEmail());
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
             read.getReset().doClick();
@@ -414,6 +425,14 @@ public class ControllerImplementation implements IController, ActionListener {
                 update.getPhone().setText(String.valueOf(pNew.getPhone() + ""));
                 update.getPostalCode().setEnabled(true);
                 update.getPostalCode().setText(pNew.getPostalCode() + "");
+                if (update.getPostalCode().getText().equals("null")) {
+                    update.getPostalCode().setText("");
+                }
+                update.getEmail().setEnabled(true);
+                update.getEmail().setText(pNew.getEmail() + "");
+                if (update.getEmail().getText().equals("null")) {
+                    update.getEmail().setText("");
+                }
                 if (pNew.getDateOfBirth() != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(pNew.getDateOfBirth());
@@ -423,11 +442,6 @@ public class ControllerImplementation implements IController, ActionListener {
                 if (pNew.getPhoto() != null) {
                     pNew.getPhoto().getImage().flush();
                     update.getPhoto().setIcon(pNew.getPhoto());
-                    update.getUpdate().setEnabled(true);
-                }
-                if (pNew.getPostalCode() != null) {
-                    pNew.getPostalCode();
-                    update.getPostalCode();
                     update.getUpdate().setEnabled(true);
                 }
             } else {
@@ -454,6 +468,13 @@ public class ControllerImplementation implements IController, ActionListener {
             return;
         }
 
+        String emailRegex = "^[a-zA-Z0-9_+&-]+(?:.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+.)+[a-zA-Z]{2,7}$";
+        String email = update.getEmail().getText();
+        if (!email.isBlank() && !email.matches(emailRegex)) {
+            JOptionPane.showMessageDialog(menu, "Invalid email format.\n Example: jose12@email.com", "Insert - People v1.1.0", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         if (update != null) {
             Person p = new Person(update.getNam().getText(), update.getNif().getText(), Integer.valueOf(phone));
             if ((update.getDateOfBirth().getModel().getValue()) != null) {
@@ -464,6 +485,9 @@ public class ControllerImplementation implements IController, ActionListener {
             }
             if (postalCode != null) {
                 p.setPostalCode(postalCode);
+            }
+            if (email != null) {
+                p.setEmail(email);
             }
             update(p);
             update.getReset().doClick();
@@ -490,10 +514,11 @@ public class ControllerImplementation implements IController, ActionListener {
                     model.setValueAt("", i, 3);
                 }
                 model.setValueAt(s.get(i).getPostalCode(), i, 4);
+                model.setValueAt(s.get(i).getEmail(), i, 5);
                 if (s.get(i).getPhoto() != null) {
-                    model.setValueAt("yes", i, 5);
+                    model.setValueAt("yes", i, 6);
                 } else {
-                    model.setValueAt("no", i, 5);
+                    model.setValueAt("no", i, 6);
                 }
             }
             readAll.setVisible(true);

@@ -33,8 +33,8 @@ public class DAOSQL implements IDAO {
 
     private final String SQL_SELECT_ALL = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
     private final String SQL_SELECT = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?);";
-    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, dateOfBirth, photo, phone, postalCode) VALUES (?, ?, ?, ?, ?, ?);";
-    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, dateOfBirth = ?, photo = ? , phone = ? , postalCode = ? WHERE (nif = ?);";
+    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, dateOfBirth, photo, phone, postalCode, email) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, dateOfBirth = ?, photo = ? , phone = ? , postalCode = ? , email = ? WHERE (nif = ?);";
     private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ";
     private final String SQL_DELETE_ALL = "TRUNCATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE();
     private final String SQL_COUNT = "SELECT COUNT(*) AS total FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
@@ -77,6 +77,10 @@ public class DAOSQL implements IDAO {
             if (postalCode != null){
                 pReturn.setPostalCode(postalCode);
             }
+            String email = rs.getString("email");
+            if (email != null){
+                pReturn.setEmail(email);
+            }
         }
         rs.close();
         instruction.close();
@@ -100,10 +104,11 @@ public class DAOSQL implements IDAO {
             String photo = rs.getString("photo");
             int phone = rs.getInt("phone");
             String postalCode = rs.getString("postalCode");
+            String email = rs.getString("email");
             if (photo != null) {
-                people.add(new Person(nif, name, date, new ImageIcon(photo), phone, postalCode));
+                people.add(new Person(nif, name, date, new ImageIcon(photo), phone, postalCode, email));
             } else {
-                people.add(new Person(nif, name, date, null, phone, postalCode));
+                people.add(new Person(nif, name, date, null, phone, postalCode, email));
             }
         }
         rs.close();

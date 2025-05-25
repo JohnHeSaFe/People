@@ -17,11 +17,12 @@ class PersonTest {
     private ImageIcon photo = new ImageIcon();
     private int phone = 600700800;
     private String postalCode = "08001";
+    private String email = "johndoe123@gmail.com";
 
     @BeforeEach
     void setUp() {
         person = new Person(nif);
-        personWithFullData = new Person(name, nif,dateOfBirth,photo,phone,postalCode);
+        personWithFullData = new Person(name, nif, dateOfBirth, photo, phone, postalCode, email);
     }
 
     @Test
@@ -97,7 +98,7 @@ class PersonTest {
     @Test
     void testToString() {
         String expected = "Person {Name = " + name + ", NIF = " + nif
-                + ", DateOfBirth = " + dateOfBirth + ", Photo = true, Postal Code = " + postalCode + "}";
+                + ", DateOfBirth = " + dateOfBirth + ", Photo = true, Postal Code = " + postalCode + ", Email = " + email + "}";
         assertEquals(expected, personWithFullData.toString());
     }
 }

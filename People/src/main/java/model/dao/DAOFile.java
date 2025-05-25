@@ -59,11 +59,15 @@ public class DAOFile implements IDAO {
                 if (!data[4].equals("null")) {
                     postalCode = data[4];
                 }
-                ImageIcon photo = null; 
+                String email = null;
                 if (!data[5].equals("null")) {
+                    email = data[5];
+                }
+                ImageIcon photo = null; 
+                if (!data[6].equals("null")) {
                     photo = new ImageIcon(data[5]);
                 }
-                personToRead = new Person(data[0], data[1], date, photo, phone, postalCode);
+                personToRead = new Person(data[0], data[1], date, photo, phone, postalCode, email);
                 break;
             }
             line = br.readLine();
@@ -96,11 +100,15 @@ public class DAOFile implements IDAO {
             if (!data[4].equals("null")) {
                 postalCode = data[4];
             }
-            ImageIcon photo = null;
+            String email = null;
             if (!data[5].equals("null")) {
+                email = data[5];
+            }
+            ImageIcon photo = null;
+            if (!data[6].equals("null")) {
                 photo = new ImageIcon(data[5]);
             }
-            people.add(new Person(data[0], data[1], date, photo, phone, postalCode));
+            people.add(new Person(data[0], data[1], date, photo, phone, postalCode, email));
             line = br.readLine();
         }
         br.close();
@@ -129,6 +137,12 @@ public class DAOFile implements IDAO {
             bw.write("null" + "\t");
         }
         
+        if (p.getEmail() != null && !p.getEmail().isEmpty()) {
+            bw.write(p.getEmail() + "\t");
+        } else {
+            bw.write("null" + "\t");
+        }
+        
         if (p.getPhoto() != null) {
             FileOutputStream out;
             BufferedOutputStream outB;
@@ -149,10 +163,12 @@ public class DAOFile implements IDAO {
             }
             outB.flush();
             outB.close();
-            bw.write(fileName + "\n");
+            bw.write(fileName);
         } else {
-            bw.write("null" + "\n");
+            bw.write("null");
         }
+        
+        bw.newLine();
         bw.flush();
         bw.close();
     }
@@ -174,7 +190,7 @@ public class DAOFile implements IDAO {
                 }
             } else {
                 textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3]
-                        + "\t" + d[4] + "\t" + d[5] + "\n";
+                        + "\t" + d[4] + "\t" + d[5] + "\t" + d[6] + "\n";
             }
         }
         rafRW.setLength(0);

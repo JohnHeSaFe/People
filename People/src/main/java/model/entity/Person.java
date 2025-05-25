@@ -26,6 +26,7 @@ public class Person implements Serializable {
     private Date dateOfBirth;
     private int phone;
     private String postalCode;
+    private String email;
     @Transient
     private ImageIcon photo;
     @Lob
@@ -66,13 +67,14 @@ public class Person implements Serializable {
      * @param dateOfBirth
      * @param photo
      */
-    public Person(String name, String nif, Date dateOfBirth, ImageIcon photo, int phone, String postalCode) {
+    public Person(String name, String nif, Date dateOfBirth, ImageIcon photo, int phone, String postalCode, String email) {
         this.name = name;
         this.nif = nif;
         this.dateOfBirth = dateOfBirth;
         this.photo = photo;
         this.phone = phone;
         this.postalCode = postalCode;
+        this.email = email;
     }
 
     //Getters and Setters
@@ -132,6 +134,14 @@ public class Person implements Serializable {
         this.postalCode = postalCode;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     /**
      * Function used to compare two Personas. There cannot be two or more people
      * with the same ID. Actually it isn't used in this project.
@@ -178,6 +188,7 @@ public class Person implements Serializable {
         return "Person {Name = " + name + ", NIF = " + nif
             + ", DateOfBirth = " + dateOfBirth
             + ", Photo = " + (photo != null)
-            + ", Postal Code = " + postalCode + "}";
+            + ", Postal Code = " + postalCode
+            + ", Email = " + email + "}";
     }
 }
