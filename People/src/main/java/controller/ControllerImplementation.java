@@ -26,6 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -164,7 +166,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleLogin() {
-        // Justin Implement login functionality #2
+
 
         String username = login.getUsername().getText();
         String password = login.getPassword().getText();
@@ -172,18 +174,48 @@ public class ControllerImplementation implements IController, ActionListener {
         if (username.isBlank() || password.isBlank()) {
             JOptionPane.showMessageDialog(login, "Please fill all camps", "Login - People v1.1.0", JOptionPane.WARNING_MESSAGE);
             return;
+        } 
+        
+        
+        try {
+            
+            Connection conn = DriverManager.getConnection(
+                    Routes.DB.getDbServerAddress() + "/" + Routes.DB.getDbServerDB() + Routes.DB.getDbServerComOpt(),
+                    Routes.DB.getDbServerUser(),
+                    Routes.DB.getDbServerPassword()
+            );
+            
+            String query = "SELECT role FROM users WHERE username = ? AND password = ?";
+          
+            PreparedStatement ps = conn.prepareStatement(query);
+            
+           
+            ps.setString(1, username);
+            ps.setString(2, password);
+
+            
+            ResultSet rs = ps.executeQuery();
+            
+   
+            if (rs.next()) {
+                String role = rs.getString("role");
+                userRole = role; 
+
+                rs.close();
+                ps.close();
+                conn.close();
+
+                login.dispose();
+                setupMenu();
+            } else {
+                JOptionPane.showMessageDialog(login, "Invalid username or password", "Login - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR WHILE LOGING-IN!");
+            e.printStackTrace();
         }
 
-        /*
-        ...
-        
-        if (...) {
-            userRole = "admin";
-        } else {
-            userRole = "employee";
-        }
-         */
-        userRole = "admin";
 
         login.dispose();
 
@@ -191,6 +223,40 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void setupLogin() {
+        try {
+            Connection conn = DriverManager.getConnection(Routes.DB.getDbServerAddress() + Routes.DB.getDbServerComOpt(),
+                    Routes.DB.getDbServerUser(), Routes.DB.getDbServerPassword());
+            if (conn != null) {
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate("create database if not exists " + Routes.DB.getDbServerDB() + ";");
+                
+                //CREATE TABLE USERS
+                stmt.executeUpdate("create table if not exists " + Routes.DB.getDbServerDB() + "." + "users" + "("
+                        + "id int primary key not null, "
+                        + "username varchar(50), "
+                        + "password varchar(200),"
+                        + "role varchar(10));");
+                
+                //CREATE USER ADMIN
+                stmt.executeUpdate("INSERT IGNORE INTO " + Routes.DB.getDbServerDB() + ".users (id, username, password, role) "
+                 + "VALUES (1, 'admin', 'admin', 'admin');");
+                
+                //CREATE USER EMPLOYEE
+                stmt.executeUpdate("INSERT IGNORE INTO " + Routes.DB.getDbServerDB() + ".users (id, username, password, role) "
+                 + "VALUES (2, 'employee', 'employee', 'employee');");
+                
+                stmt.close();
+                
+                conn.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println("ERROR WHILE TRYING TO CREATE USERS DATABASE");
+            System.exit(0);
+        }
+        
+        
+        
+        
         login = new Login();
         login.setVisible(true);
         login.getLogin().addActionListener(this);
